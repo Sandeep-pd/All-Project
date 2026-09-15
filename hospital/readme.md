@@ -167,3 +167,228 @@ Python | Data Science | GenAI | Agentic AI Enthusiast
 
 If you found this project useful, please give it a ⭐ on GitHub.
 
+## 🧪 API Testing with Postman
+
+The Hospital Management API can be tested using **Postman**.
+
+### 1. Start the FastAPI Server
+
+Run the following command from the project directory:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+You can also open the automatic Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+### 2. Health Check
+
+**Method:** `GET`
+
+**Endpoint:**
+
+```text
+GET http://127.0.0.1:8000/health
+```
+
+**Expected Response:**
+
+```json
+{
+    "status": "ok",
+    "database": "connected"
+}
+```
+
+---
+
+### 3. Create a Patient
+
+**Method:** `POST`
+
+**Endpoint:**
+
+```text
+POST http://127.0.0.1:8000/patients
+```
+
+In Postman:
+
+**Body → raw → JSON**
+
+```json
+{
+    "patient_id": 1,
+    "name": "Rahul Sharma",
+    "age": 35,
+    "gender": "Male",
+    "phone": "9876543210",
+    "disease": "Fever"
+}
+```
+
+**Expected Response:**
+
+```json
+{
+    "patient_id": 1,
+    "name": "Rahul Sharma",
+    "age": 35,
+    "gender": "Male",
+    "phone": "9876543210",
+    "disease": "Fever"
+}
+```
+
+---
+
+### 4. Get All Patients
+
+**Method:** `GET`
+
+**Endpoint:**
+
+```text
+GET http://127.0.0.1:8000/patients
+```
+
+**Expected Response:**
+
+```json
+[
+    {
+        "patient_id": 1,
+        "name": "Rahul Sharma",
+        "age": 35,
+        "gender": "Male",
+        "phone": "9876543210",
+        "disease": "Fever"
+    }
+]
+```
+
+---
+
+### 5. Get Patient by ID
+
+**Method:** `GET`
+
+**Endpoint:**
+
+```text
+GET http://127.0.0.1:8000/patients?patient_id=1
+```
+
+This returns the patient whose `patient_id` is `1`.
+
+---
+
+### 6. Create a Doctor
+
+**Method:** `POST`
+
+**Endpoint:**
+
+```text
+POST http://127.0.0.1:8000/doctors
+```
+
+In Postman:
+
+**Body → raw → JSON**
+
+```json
+{
+    "doctor_id": 1,
+    "name": "Dr. Amit Verma",
+    "specialization": "Cardiologist",
+    "phone": "9988776655"
+}
+```
+
+**Expected Response:**
+
+```json
+{
+    "doctor_id": 1,
+    "name": "Dr. Amit Verma",
+    "specialization": "Cardiologist",
+    "phone": "9988776655"
+}
+```
+
+---
+
+### 7. Get All Doctors
+
+**Method:** `GET`
+
+**Endpoint:**
+
+```text
+GET http://127.0.0.1:8000/doctors
+```
+
+**Expected Response:**
+
+```json
+[
+    {
+        "doctor_id": 1,
+        "name": "Dr. Amit Verma",
+        "specialization": "Cardiologist",
+        "phone": "9988776655"
+    }
+]
+```
+
+---
+
+## 📋 API Testing Summary
+
+| Feature           | Method | Endpoint                 |
+| ----------------- | ------ | ------------------------ |
+| Health Check      | GET    | `/health`                |
+| Get All Patients  | GET    | `/patients`              |
+| Get Patient by ID | GET    | `/patients?patient_id=1` |
+| Create Patient    | POST   | `/patients`              |
+| Get All Doctors   | GET    | `/doctors`               |
+| Create Doctor     | POST   | `/doctors`               |
+
+### Postman Configuration
+
+For POST requests:
+
+1. Open **Postman**
+2. Select `POST`
+3. Enter the API endpoint
+4. Go to **Body**
+5. Select **raw**
+6. Select **JSON**
+7. Enter the request JSON
+8. Click **Send**
+9. Verify the response and HTTP status code
+
+### HTTP Status Codes
+
+| Status Code | Meaning                             |
+| ----------- | ----------------------------------- |
+| `200`       | Request successful                  |
+| `201`       | Patient/Doctor created successfully |
+| `409`       | Patient/Doctor ID already exists    |
+| `422`       | Validation error                    |
+| `500`       | Server-side error                   |
+
+The API uses **Pydantic validation** to validate patient and doctor input before storing data in SQLite.
