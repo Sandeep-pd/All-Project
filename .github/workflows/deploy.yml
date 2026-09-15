@@ -24,3 +24,19 @@ jobs:
 
       - name: Push Docker image
         run: docker push sandeep0030/hospital-api:latest
+
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull sandeep0030/hospital-api:latest
+            docker stop hospital-api || true
+            docker rm hospital-api || true
+            docker run -d --name hospital-api -p 8002:8002 sandeep0030/hospital-api:latest
+
+
+      
