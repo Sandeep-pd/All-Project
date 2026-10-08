@@ -1,0 +1,29 @@
+name: Deploy Flight API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            cd /home/ec2-user/All-Project
+            git pull origin main
+
+            cd flight_agent
+            source venv/bin/activate
+            pip install -r requirements.txt
+
+            sudo systemctl restart flight-api
+            sudo systemctl is-active flight-api
