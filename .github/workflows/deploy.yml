@@ -1,0 +1,38 @@
+name: Hospital API CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t sandeep0030/hospital-api:latest ./hospital
+
+      - name: Push Docker image
+        run: docker push sandeep0030/hospital-api:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull sandeep0030/hospital-api:latest
+            docker stop hospital-api || true
+            docker rm hospital-api || true
+            docker run -d --name hospital-api -p 8002:8002 sandeep0030/hospital-api:latest
